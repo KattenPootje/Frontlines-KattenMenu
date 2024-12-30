@@ -52,6 +52,10 @@ FeatureValue.Name = "FeatureValue"
 FeatureValue.Value = FeatureName
 local ESP = false
 local LastESPUpdate = os.clock()
+local PlayerESPColor = Color3.fromRGB(255, 0, 0)
+local NameTagESPColor = Color3.fromRGB(234, 50, 50)
+local WeaponESPColor = Color3.fromRGB(0, 255, 0)
+local KnifeESPColor = Color3.fromRGB(255, 255, 255)
 
 MenuFeatures += 1
 local FeatureName = "Mouse TP"
@@ -108,6 +112,41 @@ local EasyKills = false
 local Victim = nil
 
 MenuFeatures += 1
+local FeatureName = "Knife Fire"
+local FeatureKey = "H"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Crazy movement"
+local FeatureKey = "J"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local CrazyMovement = false
+
+MenuFeatures += 1
 local FeatureName = "Destroy menu"
 local FeatureKey = "END"
 local MenuFeatureTitle = ExampleButton:Clone()
@@ -149,46 +188,9 @@ function AddESP()
                     local Highlight = Instance.new("Highlight")
                     Highlight.Parent = Soldiers
                     Highlight.Name = "EspHighlight"
-                    Highlight.OutlineTransparency = 1
+                    Highlight.OutlineTransparency = .9
                     Highlight.FillTransparency = 0.5
-                    Highlight.FillColor = Color3.fromRGB(255, 0, 0)
-
-
-
-                    local EnableESPMarker = false
-                    if EnableESPMarker ==  true then
-                        local Marker = Instance.new("BillboardGui")
-                        Marker.Parent = Soldiers
-                        Marker.Adornee = Soldiers.HumanoidRootPart
-                        Marker.AlwaysOnTop = true
-                        Marker.LightInfluence = 0
-                        Marker.Name = "ESPMarker"
-                        Marker.ResetOnSpawn = false
-                        Marker.Size = UDim2.new(0, 100,0, 100)
-                        Marker.StudsOffset = Vector3.new(0, 2, 0)
-                        local MarkerImage1 = Instance.new("ImageLabel")
-                        MarkerImage1.Parent = Marker
-                        MarkerImage1.Name = "Marker"
-                        MarkerImage1.BackgroundTransparency = 1
-                        MarkerImage1.AnchorPoint = Vector2.new(0.5, 0.5)
-                        MarkerImage1.Position = UDim2.new(0.5, 0,0.5, 0)
-                        MarkerImage1.Size = UDim2.new(0, 20,0, 20)
-                        MarkerImage1.Image = "rbxassetid://12509506672"
-                        MarkerImage1.ImageColor3 = Color3.fromRGB(229, 41, 41)
-                        MarkerImage1.ZIndex = 1
-                        local MarkerImage2 = Instance.new("ImageLabel")
-                        MarkerImage2.Parent = Marker
-                        MarkerImage2.Name = "Marker"
-                        MarkerImage2.BackgroundTransparency = 1
-                        MarkerImage2.AnchorPoint = Vector2.new(0.5, 0.5)
-                        MarkerImage2.Position = UDim2.new(0.5, 1,0.5, 1)
-                        MarkerImage2.Size = UDim2.new(0, 20,0, 20)
-                        MarkerImage2.Image = "rbxassetid://12509506672"
-                        MarkerImage2.ImageColor3 = Color3.fromRGB(0, 0, 0)
-                        MarkerImage2.ImageTransparency = 0.5
-                        MarkerImage2.ZIndex = 0
-                    end
-
+                    Highlight.FillColor = PlayerESPColor
                 elseif Soldiers:FindFirstChild("friendly_marker") or Soldiers:FindFirstChild("fpv_rig") or Soldiers.HumanoidRootPart.Root_M.Position.Magnitude > 1 then
                     if Soldiers:FindFirstChild("EspHighlight") then
                         Soldiers.EspHighlight:Destroy()
@@ -196,6 +198,24 @@ function AddESP()
                     if Soldiers:FindFirstChild("ESPMarker") then
                         Soldiers.ESPMarker:Destroy()
                     end
+                end
+            elseif Soldiers.Name == "combat_knife" then
+                if not Soldiers:FindFirstChild("EspHighlight") then
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = Soldiers
+                    Highlight.Name = "EspHighlight"
+                    Highlight.OutlineTransparency = .9
+                    Highlight.FillTransparency = 0.5
+                    Highlight.FillColor = KnifeESPColor
+                end
+            elseif Soldiers.Name == "Model" then
+                if not Soldiers:FindFirstChild("EspHighlight") then
+                    local Highlight = Instance.new("Highlight")
+                    Highlight.Parent = Soldiers
+                    Highlight.Name = "EspHighlight"
+                    Highlight.OutlineTransparency = .9
+                    Highlight.FillTransparency = 0.5
+                    Highlight.FillColor = WeaponESPColor
                 end
             end
         end
@@ -213,6 +233,15 @@ function AddESP()
                             Markers.name_label.TextTransparency = 0
                             Markers.name_label.shadow.TextStrokeTransparency = 0.61
                             Markers.name_label.shadow.TextTransparency = 0.61
+                            
+                            local ChangeMarkerColor = true
+                            local MarkerColor =  NameTagESPColor
+                            if ChangeMarkerColor == true then
+                                Markers.marker.ImageColor3 = MarkerColor
+                                Markers.name_label.TextColor3 = MarkerColor
+                                Markers.health_frame.health_bar.BackgroundColor3 = MarkerColor
+                            end
+                            
                         end
                     end
                 end
@@ -230,6 +259,14 @@ function RemoveESP()
                 if Soldiers:FindFirstChild("ESPMarker") then
                     Soldiers.ESPMarker:Destroy()
                 end
+            elseif Soldiers.Name == "combat_knife" then
+                if Soldiers:FindFirstChild("EspHighlight") then
+                    Soldiers.EspHighlight:Destroy()
+                end
+            elseif Soldiers.Name == "Model" then
+                if Soldiers:FindFirstChild("EspHighlight") then
+                    Soldiers.EspHighlight:Destroy()
+                end
             end
         end
     end
@@ -245,6 +282,10 @@ function RemoveESP()
                         Markers.name_label.TextTransparency = 1
                         Markers.name_label.shadow.TextStrokeTransparency = 1
                         Markers.name_label.shadow.TextTransparency = 1
+                        
+                        Markers.marker.ImageColor3 = Color3.fromRGB(234, 50, 50)
+                        Markers.name_label.TextColor3 = Color3.fromRGB(234, 50, 50)
+                        Markers.health_frame.health_bar.BackgroundColor3 = Color3.fromRGB(234, 50, 50)
                     end
                 end
             end
@@ -317,6 +358,42 @@ function GetRandomEnemy()
 end
 
 
+function KnifeFire()
+    for _,Knife in pairs(workspace:GetChildren()) do
+        if Knife.Name == "Model" then
+            if Knife:FindFirstChild("combat_knife") then
+                if not Knife.combat_knife.Knife1.equipment:FindFirstChild("ParticleEmitter") then
+                    --it is a knife
+                    local Particles = Instance.new("ParticleEmitter")
+                    Particles.Parent = Knife.combat_knife.Knife1.equipment
+                    Particles.Color = ColorSequence.new(Color3.fromRGB(255,156,106))
+                    Particles.LightInfluence = 1
+                    Particles.LightEmission = 1
+                    Particles.Size = NumberSequence.new(0.15)
+                    Particles.Texture = "rbxassetid://101816370754006"
+                    Particles.Transparency = NumberSequence.new(0.6,1)
+                    Particles.Lifetime = NumberRange.new(2)
+                    Particles.Rate = 6
+                    Particles.Rotation = NumberRange.new(-360,360)
+                    Particles.Speed = NumberRange.new(0.1,0.4)
+                    Particles.LockedToPart = true
+                    Particles.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid8x8
+                    Particles.FlipbookFramerate = 70
+                    Particles.FlipbookMode = Enum.ParticleFlipbookMode.Loop
+                    Particles.FlipbookStartRandom = true
+                end
+            end
+        end
+    end
+end
+
+
+function IncreaseRPM()
+    game.ReplicatedStorage.FrontlinesConfigurations.SoldierMovement.jump.mp5.height_multiplier.Value = 5
+end
+
+
+
 UserInputService.InputBegan:Connect(function(input)
     if Destroyed == false then
         for _,CheckFeatures in pairs(Frame:GetChildren()) do
@@ -352,6 +429,16 @@ UserInputService.InputBegan:Connect(function(input)
                             CheckFeatures.BackgroundColor3 = FeatureColor
                             Victim = nil
                         end
+                    elseif CheckFeatures.FeatureValue.Value == "Knife Fire" then
+                        KnifeFire()
+                    elseif CheckFeatures.FeatureValue.Value == "Crazy movement" then
+                        if CrazyMovement == false then
+                            CrazyMovement = true
+                            CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                        else
+                            CrazyMovement = false
+                            CheckFeatures.BackgroundColor3 = FeatureColor
+                        end
                     end
                     break
                 end
@@ -385,6 +472,16 @@ while true do
     else
         Frame["Mouse TP"].BackgroundColor3 = FeatureColor
     end
+    if CrazyMovement == true and Character ~= nil then
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            Character.HumanoidRootPart.Velocity = Character.HumanoidRootPart.CFrame.LookVector * 100
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            Character.HumanoidRootPart.Velocity += Vector3.new(0,35,0)
+        end
+    else
+        CrazyMovement = false
+    end
     if EasyKills == true and Character ~= nil then
         if Victim == nil then
             GetRandomEnemy()
@@ -393,21 +490,8 @@ while true do
             EnableNoclip()
             local VictimCharacter = Victim.Adornee.Parent
             if VictimCharacter ~= workspace then
-                Character.HumanoidRootPart.Velocity = ((VictimCharacter.HumanoidRootPart.Position+Vector3.new(0,1.4,0)-(VictimCharacter.HumanoidRootPart.CFrame.LookVector*1.8))-Character.HumanoidRootPart.Position) * 6
-                
+                Character.HumanoidRootPart.Velocity = ((VictimCharacter.HumanoidRootPart.Position+Vector3.new(0,0,0)-(VictimCharacter.HumanoidRootPart.CFrame.LookVector*2.5))-Character.HumanoidRootPart.Position) * 15
                 --cap velocity
-                if Character.HumanoidRootPart.Velocity.X > 140 then
-                    Character.HumanoidRootPart.Velocity = Vector3.new(140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
-                end
-                if Character.HumanoidRootPart.Velocity.X < -140 then
-                    Character.HumanoidRootPart.Velocity = Vector3.new(-140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
-                end
-                if Character.HumanoidRootPart.Velocity.Z > 140 then
-                    Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,140)
-                end
-                if Character.HumanoidRootPart.Velocity.Z < -140 then
-                    Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,-140)
-                end
             else
                 Victim = nil
                 DisableNoclip()
@@ -418,6 +502,26 @@ while true do
     else
         DisableNoclip()
         EasyKills = false
+    end
+    if CrazyMovement == true or EasyKills ==  true and Character ~= nil then
+        if Character.HumanoidRootPart.Velocity.X > 140 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
+        end
+        if Character.HumanoidRootPart.Velocity.X < -140 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(-140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
+        end
+        if Character.HumanoidRootPart.Velocity.Y > 100 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,100,Character.HumanoidRootPart.Velocity.Z)
+        end
+        if Character.HumanoidRootPart.Velocity.Y < -100 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,-100,Character.HumanoidRootPart.Velocity.Z)
+        end
+        if Character.HumanoidRootPart.Velocity.Z > 140 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,140)
+        end
+        if Character.HumanoidRootPart.Velocity.Z < -140 then
+            Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,-140)
+        end
     end
     if UserInputService:IsKeyDown(Enum.KeyCode.End) then
         print("destroying "..SciptTitle)
