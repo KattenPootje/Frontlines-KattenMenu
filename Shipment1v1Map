@@ -1,0 +1,4926 @@
+--Shipment1v1Map
+
+local SciptTitle = "KattenPootje map loader"
+print("starting "..SciptTitle)
+
+
+local Destroyed = false
+local RGBHue = 0
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local PhysicsService = game:GetService("PhysicsService")
+local Cam = workspace.CurrentCamera
+local Player = game.Players.LocalPlayer
+local Mouse = Player:GetMouse()
+
+
+local UI = Instance.new("ScreenGui")
+UI.Parent = Player.PlayerGui
+UI.Name = SciptTitle
+UI.ZIndexBehavior = Enum.ZIndexBehavior.Global
+local Frame = Instance.new("Frame")
+Frame.Parent = UI
+Frame.Position = UDim2.new(0, 10, 0, 250)
+Frame.ZIndex = 999
+local MenuFeatures = 0
+local FeatureUISize = 20
+local FeatureColor = Color3.fromRGB(0, 0, 0)
+local FeatureEnabledColor = Color3.fromRGB(23, 15, 40)
+local TitleColor = Color3.fromRGB(113, 72, 195)
+local FeatureTextColor = Color3.fromRGB(255, 255, 255)
+local TitleTextColor = Color3.fromRGB(33, 33, 33)
+
+local ExampleButton = Instance.new("TextLabel")
+ExampleButton.ZIndex = 1000
+ExampleButton.Size = UDim2.new(1, 0, 0, FeatureUISize)
+ExampleButton.TextXAlignment = Enum.TextXAlignment.Left
+ExampleButton.BackgroundColor3 = FeatureColor
+ExampleButton.TextColor3 = FeatureTextColor
+
+MenuFeatures += 1
+local FeatureName = "Load map"
+local FeatureKey = "M"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "respawn to 1"
+local FeatureKey = "Four"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local Respawn1 = false
+local RespawnedToMap = false
+
+MenuFeatures += 1
+local FeatureName = "respawn to 2"
+local FeatureKey = "Five"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local Respawn2 = false
+
+MenuFeatures += 1
+local FeatureName = "respawn to random"
+local FeatureKey = "N"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local RespawnRandom = false
+
+MenuFeatures += 1
+local FeatureName = "Mouse TP"
+local FeatureKey = "T"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Custom music"
+local FeatureKey = "I"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local CustomMusic = false
+
+MenuFeatures += 1
+local FeatureName = "Toggle barriers"
+local FeatureKey = "RightShift"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local Barriers = false
+
+MenuFeatures += 1
+local FeatureName = "Knife Fire"
+local FeatureKey = "Six"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Glass camo"
+local FeatureKey = "Zero"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Camo2"
+local FeatureKey = "Nine"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Camo3"
+local FeatureKey = "Eight"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "Camo4"
+local FeatureKey = "Seven"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+
+MenuFeatures += 1
+local FeatureName = "One handed mode"
+local FeatureKey = "Y"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local OneHanded = false
+
+MenuFeatures += 1
+local FeatureName = "Custom reticle"
+local FeatureKey = "L"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local KeyValue = Instance.new("StringValue")
+KeyValue.Parent = MenuFeatureTitle
+KeyValue.Name = "KeyValue"
+KeyValue.Value = FeatureKey
+local FeatureValue = Instance.new("StringValue")
+FeatureValue.Parent = MenuFeatureTitle
+FeatureValue.Name = "FeatureValue"
+FeatureValue.Value = FeatureName
+local CustomReticle = false
+local CanSetReticle = true
+local LastReticleUpdate = os.clock()
+
+MenuFeatures += 1
+local FeatureName = "Lock settings"
+local FeatureKey = "Slash/Enter"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+local LockSettings = false
+
+MenuFeatures += 1
+local FeatureName = "Destroy menu"
+local FeatureKey = "END"
+local MenuFeatureTitle = ExampleButton:Clone()
+MenuFeatureTitle.Name = FeatureName
+MenuFeatureTitle.Parent = Frame
+MenuFeatureTitle.Text = FeatureName .. " - " .. FeatureKey
+MenuFeatureTitle.Position = UDim2.new(0, 0, 0, ((MenuFeatures-1)*FeatureUISize)+20)
+
+--end menu features
+
+
+Frame.Size = UDim2.new(0, 150, 0, MenuFeatures * FeatureUISize+20)
+
+
+local MenuTitle = Instance.new("TextLabel")
+MenuTitle.BackgroundColor3 = TitleColor
+MenuTitle.TextColor3 = TitleTextColor
+MenuTitle.Parent = Frame
+MenuTitle.ZIndex = 1000
+MenuTitle.Text = SciptTitle
+MenuTitle.Position = UDim2.new(0, 0, 0, 0)
+MenuTitle.Size = UDim2.new(1, 0, 0, FeatureUISize)
+MenuTitle.TextXAlignment = Enum.TextXAlignment.Center
+
+
+
+
+function RemoveBarriers()
+    local CollectionService = game:GetService("CollectionService")
+    for _, Barriers in pairs(CollectionService:GetTagged("MAP_BOUNDARY")) do
+        if Barriers.CanCollide == true and Barriers.Transparency == 1 then
+            Barriers:AddTag("RemagniovedBarrier")
+            Barriers.CanCollide = false
+        end
+    end
+end
+function RestoreBarriers()
+    local CollectionService = game:GetService("CollectionService")
+    for _, Barriers in pairs(CollectionService:GetTagged("RemovedBarrier")) do
+        if Barriers ~= nil then
+            Barriers.CanCollide = true
+        end
+    end
+end
+
+
+function EnableNoclip()
+    local Character = nil
+    for _,Soldiers in pairs(workspace:GetChildren()) do
+        if Soldiers ~= nil  then
+            if Soldiers.Name == "soldier_model" then
+                if Soldiers:FindFirstChild("fpv_rig") then
+                    if Soldiers:FindFirstChild("HumanoidRootPart") then
+                        Character = Soldiers
+                    end
+                end
+            end
+        end
+    end
+    if Character ~= nil then
+        Character.HumanoidRootPart.CanCollide =  false
+    end
+end
+function DisableNoclip()
+    local Character = nil
+    for _,Soldiers in pairs(workspace:GetChildren()) do
+        if Soldiers ~= nil  then
+            if Soldiers.Name == "soldier_model" then
+                if Soldiers:FindFirstChild("fpv_rig") then
+                    if Soldiers:FindFirstChild("HumanoidRootPart") then
+                        Character = Soldiers
+                    end
+                end
+            end
+        end
+    end
+    if Character ~= nil then
+        Character.HumanoidRootPart.CanCollide =  true
+    end
+end
+
+
+function KnifeFire()
+    for _,Knife in pairs(workspace:GetChildren()) do
+        if Knife.Name == "Model" then
+            if Knife:FindFirstChild("combat_knife") then
+                for _,AttachmentsParts in pairs(Knife.combat_knife:GetChildren()) do
+                    if AttachmentsParts.ClassName == "MeshPart" then
+                        if AttachmentsParts:HasTag("Camo3") then
+                            AttachmentsParts:RemoveTag("Camo3")
+                        end
+                        if AttachmentsParts:HasTag("Camo4") then
+                            AttachmentsParts:RemoveTag("Camo4")
+                        end
+                        if AttachmentsParts:FindFirstChild("SurfaceAppearance") then
+                            AttachmentsParts.SurfaceAppearance:Destroy()
+                        end
+
+                        if AttachmentsParts.Transparency < 0.1 or AttachmentsParts.Transparency > 1 then
+                            AttachmentsParts.Color = Color3.fromRGB(255, 134, 48)
+                            AttachmentsParts.Material = Enum.Material.Asphalt
+                            AttachmentsParts.MaterialVariant = "crackedAsphaltSnow"
+                            AttachmentsParts.Transparency = 0
+                        end
+                    end
+                end
+
+                if Knife.combat_knife.Knife1:FindFirstChild("FireParticlesAttachment") then
+                    Knife.combat_knife.Knife1.FireParticlesAttachment:Destroy()
+                end
+                local FireParticlesAttachment = Knife.combat_knife.Knife1.equipment:Clone()
+                FireParticlesAttachment.Parent = Knife.combat_knife.Knife1
+                FireParticlesAttachment.Name = "FireParticlesAttachment"
+                FireParticlesAttachment.Position = Vector3.new(0, 0.45, 0)
+
+                local FireLight =  Instance.new("PointLight")
+                FireLight.Parent = FireParticlesAttachment
+                FireLight.Color = Color3.fromRGB(255, 171, 97)
+                FireLight.Brightness = .9
+                FireLight.Range = 3.6
+                local FireLight2 =  Instance.new("PointLight")
+                FireLight2.Parent = FireParticlesAttachment
+                FireLight2.Color = Color3.fromRGB(255, 171, 97)
+                FireLight2.Brightness = .07
+                FireLight2.Range = 18
+
+                local Particles = Instance.new("ParticleEmitter")
+                Particles.Parent = Knife.combat_knife.Knife1.FireParticlesAttachment
+                Particles.Orientation = Enum.ParticleOrientation.VelocityParallel
+                Particles.Color = ColorSequence.new(Color3.fromRGB(255, 255, 255))
+                Particles.LightInfluence = 1
+                Particles.LightEmission = 1
+                Particles.Size = NumberSequence.new(.6)
+                Particles.Texture = "rbxassetid://12371091637"
+                Particles.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0, 1),
+                    NumberSequenceKeypoint.new(0.2, 0.1),
+                    NumberSequenceKeypoint.new(1, 1)
+                })
+                Particles.Lifetime = NumberRange.new(1.5)
+                Particles.Rate = 1.8
+                Particles.Rotation = NumberRange.new(-90,-90)
+                Particles.Speed = NumberRange.new(0.05,0.05)
+                Particles.LockedToPart = true
+                Particles.FlipbookLayout = Enum.ParticleFlipbookLayout.Grid8x8
+                Particles.FlipbookMode = Enum.ParticleFlipbookMode.OneShot
+                --Particles.FlipbookFramerate = 200
+                --Particles.FlipbookStartRandom = true
+            end
+        end
+    end
+end
+
+
+function SetWeaponCamo(CamoType)
+    for _,CheckGun in pairs(workspace:GetChildren()) do
+        if CheckGun.Name == "Model" then
+            if CheckGun.PrimaryPart ~= nil then
+                if (CheckGun.PrimaryPart.Position-workspace.CurrentCamera.CFrame.Position).Magnitude < 8 then
+                    if CheckGun:FindFirstChild("ReflectionHighlight") then
+                        CheckGun.ReflectionHighlight:Destroy()
+                    end
+                    if CamoType == 1 then
+                        local ReflectionHighlight = Instance.new("Highlight")
+                        ReflectionHighlight.Parent = CheckGun
+                        ReflectionHighlight.Enabled = false
+                        ReflectionHighlight.Name = "ReflectionHighlight"
+                    end
+                    if CamoType == 3 then
+                        if game.MaterialService:FindFirstChild("CamoMaterial2") then
+                            game.MaterialService.CamoMaterial2:Destroy()
+                        end
+                        local CamoMaterial = game.MaterialService:FindFirstChild("trainBasalt"):Clone()
+                        CamoMaterial.Parent = game.MaterialService
+                        CamoMaterial.StudsPerTile = 2
+                        CamoMaterial.Name = "CamoMaterial2"
+                    end
+                    for _,Attachments in pairs(CheckGun:GetChildren()) do
+                        for _,AttachmentsParts in pairs(Attachments:GetChildren()) do
+                            if AttachmentsParts:HasTag("Camo3") then
+                                AttachmentsParts:RemoveTag("Camo3")
+                            end
+                            if AttachmentsParts:HasTag("Camo4") then
+                                AttachmentsParts:RemoveTag("Camo4")
+                            end
+                            if AttachmentsParts:FindFirstChild("SurfaceAppearance") then
+                                AttachmentsParts.SurfaceAppearance:Destroy()
+                            end
+                            if CamoType == 1 then
+                                if AttachmentsParts.ClassName == "MeshPart" then
+                                    if AttachmentsParts.Transparency < 0.1 or AttachmentsParts.Transparency > 1 then
+                                        AttachmentsParts.Color = Color3.fromRGB(197, 0, 0)
+                                        AttachmentsParts.Material = Enum.Material.Glass
+                                        AttachmentsParts.MaterialVariant = ""
+                                        AttachmentsParts.Transparency = 5
+                                    end
+                                end
+                            elseif CamoType == 2 then
+                                if AttachmentsParts.ClassName == "MeshPart" then
+                                    if AttachmentsParts.Transparency < 0.1 or AttachmentsParts.Transparency > 1 then
+                                        AttachmentsParts.Color = Color3.fromRGB(191, 131, 11)
+                                        AttachmentsParts.Material = Enum.Material.Metal
+                                        AttachmentsParts.MaterialVariant = ""
+                                        AttachmentsParts.Transparency = 0
+                                    end
+                                end
+                            elseif CamoType == 3 then
+                                if AttachmentsParts.ClassName == "MeshPart" then
+                                    if AttachmentsParts.Transparency < 0.1 or AttachmentsParts.Transparency > 1 then
+                                        AttachmentsParts:AddTag("Camo3")
+                                        AttachmentsParts.Color = Color3.fromHSV(RGBHue, 0.88, 0.67)
+                                        AttachmentsParts.Material = Enum.Material.Basalt
+                                        AttachmentsParts.MaterialVariant = "CamoMaterial2"
+                                        AttachmentsParts.Transparency = 0
+                                    end
+                                end
+                            elseif CamoType == 4 then
+                                if AttachmentsParts.ClassName == "MeshPart" then
+                                    if AttachmentsParts.Transparency < 0.1 or AttachmentsParts.Transparency > 1 then
+                                        AttachmentsParts:AddTag("Camo4")
+                                        AttachmentsParts.Color = Color3.fromHSV(RGBHue, 1, 1)
+                                        AttachmentsParts.Material = Enum.Material.Metal
+                                        AttachmentsParts.MaterialVariant = "galvanizedMetal"
+                                        AttachmentsParts.Transparency = 0
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
+function SetReticle()
+    local Gun = nil
+    for _,CheckGun in pairs(workspace:GetChildren()) do
+        if CheckGun.Name == "Model" then
+            Gun = CheckGun
+            for _,Attachments in pairs(Gun:GetChildren()) do
+                if Attachments:FindFirstChild("reticle") then
+                    local Sight = Attachments
+                    Sight.reticle.ImageLabel.Image = "rbxassetid://106681394040192"
+                end
+            end
+        end
+    end
+end
+function RestoreReticle()
+    local Gun = nil
+    for _,CheckGun in pairs(workspace:GetChildren()) do
+        if CheckGun.Name == "Model" then
+            Gun = CheckGun
+            for _,Attachments in pairs(Gun:GetChildren()) do
+                if Attachments:FindFirstChild("reticle") then
+                    local Sight = Attachments
+                    Sight.reticle.ImageLabel.Image = "rbxassetid://13741782316"
+                end
+            end
+        end
+    end
+end
+
+
+function EnableOneHanded()
+    local Character = nil
+    for _,Soldiers in pairs(workspace:GetChildren()) do
+        if Soldiers ~= nil  then
+            if Soldiers.Name == "soldier_model" then
+                if Soldiers:FindFirstChild("fpv_rig") then
+                    Character = Soldiers
+                    local fpv_rig = Soldiers.fpv_rig
+                    fpv_rig.FPVForearmL_LocCorrected.Transparency = 1
+                    fpv_rig.FPVGloveL_LocCorrected.Transparency = 1
+                    fpv_rig.FPVUpperArmL_LocCorrected.Transparency = 1
+                end
+            end
+        end
+    end
+end
+
+function DisableOneHanded()
+    local Character = nil
+    for _,Soldiers in pairs(workspace:GetChildren()) do
+        if Soldiers ~= nil  then
+            if Soldiers.Name == "soldier_model" then
+                if Soldiers:FindFirstChild("fpv_rig") then
+                    Character = Soldiers
+                    local fpv_rig = Soldiers.fpv_rig
+                    fpv_rig.FPVForearmL_LocCorrected.Transparency = 0
+                    fpv_rig.FPVGloveL_LocCorrected.Transparency = 0
+                    fpv_rig.FPVUpperArmL_LocCorrected.Transparency = 0
+                end
+            end
+        end
+    end
+end
+
+
+function LoadMap()
+    local MapObjects ={
+        [1] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Asphalt",
+            ["MaterialVariant"] = "crackedAsphalt",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -54.84207916259766,
+            ["PositionY"] = 207.8978271484375,
+            ["PositionZ"] = -132.5893859863281,
+            ["Shape"] = "Block",
+            ["SizeX"] = 393.4952087402344,
+            ["SizeY"] = 2.129164934158325,
+            ["SizeZ"] = 456.7799072265625
+        },
+        [2] =  {
+            ["ColorB"] = 4.000000236555934,
+            ["ColorG"] = 0,
+            ["ColorR"] = 255,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Spawn2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -43.83625030517578,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -74.03084564208984,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [3] =  {
+            ["ColorB"] = 4.000000236555934,
+            ["ColorG"] = 0,
+            ["ColorR"] = 255,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Spawn1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -95.23942565917969,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -190.9077606201172,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [4] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "LeafyGrass",
+            ["MaterialVariant"] = "OVERRIDEgrass1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = 25.33351135253906,
+            ["PositionY"] = 209.1172790527344,
+            ["PositionZ"] = -96.52215576171875,
+            ["Shape"] = "Block",
+            ["SizeX"] = 20.78532218933105,
+            ["SizeY"] = 0.3097615242004395,
+            ["SizeZ"] = 127.5333938598633
+        },
+        [5] =  {
+            ["ColorB"] = 85.0000025331974,
+            ["ColorG"] = 107.0000012218952,
+            ["ColorR"] = 129.0000075101852,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "woodWorn",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 14.51348114013672,
+            ["PositionY"] = 218.8807373046875,
+            ["PositionZ"] = -58.81059265136719,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 19.21717643737793,
+            ["SizeY"] = 2.884920358657837,
+            ["SizeZ"] = 2.884920358657837
+        },
+        [6] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 14.51348114013672,
+            ["PositionY"] = 225.3644256591797,
+            ["PositionZ"] = -58.81059265136719,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 15.22223854064941,
+            ["SizeY"] = 15.22223854064941,
+            ["SizeZ"] = 15.22223854064941
+        },
+        [7] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 14.51348114013672,
+            ["PositionY"] = 235.1584777832031,
+            ["PositionZ"] = -58.81059265136719,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 15.006760597229,
+            ["SizeY"] = 9.340067863464355,
+            ["SizeZ"] = 9.340067863464355
+        },
+        [8] =  {
+            ["ColorB"] = 85.0000025331974,
+            ["ColorG"] = 107.0000012218952,
+            ["ColorR"] = 129.0000075101852,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "woodWorn",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 19.558837890625,
+            ["PositionY"] = 220.0656585693359,
+            ["PositionZ"] = -86.34073638916016,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 21.58701133728027,
+            ["SizeY"] = 3.240684509277344,
+            ["SizeZ"] = 3.240684509277344
+        },
+        [9] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 19.558837890625,
+            ["PositionY"] = 227.3489074707031,
+            ["PositionZ"] = -86.34073638916016,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 17.09942245483398,
+            ["SizeY"] = 17.09942245483398,
+            ["SizeZ"] = 17.09942245483398
+        },
+        [10] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 19.558837890625,
+            ["PositionY"] = 238.3507537841797,
+            ["PositionZ"] = -86.34073638916016,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 16.85737228393555,
+            ["SizeY"] = 10.49187183380127,
+            ["SizeZ"] = 10.49187183380127
+        },
+        [11] =  {
+            ["ColorB"] = 85.0000025331974,
+            ["ColorG"] = 107.0000012218952,
+            ["ColorR"] = 129.0000075101852,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "woodWorn",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 40.40357971191406,
+            ["PositionY"] = 218.8807373046875,
+            ["PositionZ"] = -123.6177673339844,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 19.21717643737793,
+            ["SizeY"] = 2.884920358657837,
+            ["SizeZ"] = 2.884920358657837
+        },
+        [12] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 40.40357971191406,
+            ["PositionY"] = 225.3644256591797,
+            ["PositionZ"] = -123.6177673339844,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 15.22223854064941,
+            ["SizeY"] = 15.22223854064941,
+            ["SizeZ"] = 15.22223854064941
+        },
+        [13] =  {
+            ["ColorB"] = 112.000000923872,
+            ["ColorG"] = 180.0000044703484,
+            ["ColorR"] = 141.0000067949295,
+            ["Material"] = "Mud",
+            ["MaterialVariant"] = "OVERRIDEmud1",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 40.40357971191406,
+            ["PositionY"] = 235.1584777832031,
+            ["PositionZ"] = -123.6177673339844,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 15.006760597229,
+            ["SizeY"] = 9.340067863464355,
+            ["SizeZ"] = 9.340067863464355
+        },
+        [14] =  {
+            ["ColorB"] = 191.0000038146973,
+            ["ColorG"] = 191.0000038146973,
+            ["ColorR"] = 191.0000038146973,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = 24.59097290039062,
+            ["PositionY"] = 225.1425170898438,
+            ["PositionZ"] = 153.8057403564453,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 32.36022186279297,
+            ["SizeY"] = 83.44538879394531,
+            ["SizeZ"] = 83.44538879394531
+        },
+        [15] =  {
+            ["ColorB"] = 191.0000038146973,
+            ["ColorG"] = 191.0000038146973,
+            ["ColorR"] = 191.0000038146973,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Base",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -71.31790161132812,
+            ["PositionY"] = 225.1425170898438,
+            ["PositionZ"] = 116.4788360595703,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 32.36022186279297,
+            ["SizeY"] = 83.44538879394531,
+            ["SizeZ"] = 83.44538879394531
+        },
+        [16] =  {
+            ["ColorB"] = 185.0000041723251,
+            ["ColorG"] = 145.0000065565109,
+            ["ColorR"] = 100.0000016391277,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -116.3537902832031,
+            ["PositionY"] = 218.3348693847656,
+            ["PositionZ"] = -151.45703125,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.42781448364258
+        },
+        [17] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -120.0520095825195,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -152.8963470458984,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [18] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 65.63200378417969,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -124.0938415527344,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -142.4301605224609,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [19] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -82.23500061035156,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -115.8953018188477,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -139.494873046875,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [20] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -112.6555862426758,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -150.0177307128906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [21] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 157.9920043945312,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -111.1834182739258,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -159.4542999267578,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [22] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -109.8820037841797,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -115.9015579223633,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -163.3210754394531,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [23] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -116.3538055419922,
+            ["PositionY"] = 209.1054382324219,
+            ["PositionZ"] = -151.45703125,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [24] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -58.21446228027344,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = -21.62831115722656,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [25] =  {
+            ["ColorB"] = 207.0000028610229,
+            ["ColorG"] = 203.0000030994415,
+            ["ColorR"] = 204.0000030398369,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "dirtyConcrete",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 154.6390075683594,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -128.8864288330078,
+            ["PositionY"] = 210.9465026855469,
+            ["PositionZ"] = -96.99201202392578,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.274237632751465,
+            ["SizeY"] = 3.96820330619812,
+            ["SizeZ"] = 1.595313906669617
+        },
+        [26] =  {
+            ["ColorB"] = 97.00000181794167,
+            ["ColorG"] = 97.00000181794167,
+            ["ColorR"] = 194.0000036358833,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.23152923583984,
+            ["PositionY"] = 218.3348693847656,
+            ["PositionZ"] = -117.1167297363281,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.47429084777832
+        },
+        [27] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -31.92973136901855,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -118.5560455322266,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [28] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -33.39330291748047,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -109.1411514282227,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [29] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -106.4339981079102,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.57464790344238,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -105.2153244018555,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [30] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -24.53331184387207,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -115.6774139404297,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [31] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 55.42399978637695,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -20.19499588012695,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -125.9743499755859,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [32] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -83.87200164794922,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.63617897033691,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -129.0841064453125,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [33] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.23152542114258,
+            ["PositionY"] = 209.1054382324219,
+            ["PositionZ"] = -117.1167221069336,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [34] =  {
+            ["ColorB"] = 97.00000181794167,
+            ["ColorG"] = 97.00000181794167,
+            ["ColorR"] = 194.0000036358833,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.6660003662109,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -53.22271347045898,
+            ["PositionY"] = 218.3348693847656,
+            ["PositionZ"] = -182.5361480712891,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.44064903259277
+        },
+        [35] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.6660003662109,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -54.68785095214844,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -178.8481140136719,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [36] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.6660003662109,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -45.28347015380859,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -177.3187255859375,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [37] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -108.0540008544922,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -43.75380706787109,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -180.8419342041016,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [38] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.6660003662109,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -51.75756072998047,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -186.2241973876953,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [39] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 154.1549987792969,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -62.17839050292969,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -190.3711090087891,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [40] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 17.37700080871582,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -65.11463165283203,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -181.8338775634766,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [41] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.6660003662109,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -53.22270584106445,
+            ["PositionY"] = 209.1054382324219,
+            ["PositionZ"] = -182.5361480712891,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [42] =  {
+            ["ColorB"] = 97.00000181794167,
+            ["ColorG"] = 97.00000181794167,
+            ["ColorR"] = 194.0000036358833,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -69.58648681640625,
+            ["PositionY"] = 227.7730407714844,
+            ["PositionZ"] = -118.2585754394531,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.78565979003906
+        },
+        [43] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -73.28468322753906,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -119.697883605957,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [44] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 148.5859985351562,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -74.89876556396484,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -109.9789733886719,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [45] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -87.10199737548828,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -69.29011535644531,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -106.2812271118164,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [46] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -65.88827514648438,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -116.8192520141602,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [47] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -10.82600021362305,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -60.75466537475586,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -125.1770782470703,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [48] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -39.07400131225586,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -71.27517700195312,
+            ["PositionY"] = 223.1196746826172,
+            ["PositionZ"] = -129.5280456542969,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [49] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -69.58648681640625,
+            ["PositionY"] = 218.5436096191406,
+            ["PositionZ"] = -118.2585678100586,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [50] =  {
+            ["ColorB"] = 207.0000028610229,
+            ["ColorG"] = 203.0000030994415,
+            ["ColorR"] = 204.0000030398369,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "dirtyConcrete",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -135.0556945800781,
+            ["PositionY"] = 210.9465026855469,
+            ["PositionZ"] = -99.56488800048828,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.274237632751465,
+            ["SizeY"] = 3.96820330619812,
+            ["SizeZ"] = 1.595313906669617
+        },
+        [51] =  {
+            ["ColorB"] = 182.0000043511391,
+            ["ColorG"] = 178.0000045895576,
+            ["ColorR"] = 180.0000044703484,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -88.25396728515625,
+            ["PositionY"] = 218.3348693847656,
+            ["PositionZ"] = -93.71654510498047,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.43045043945312
+        },
+        [52] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -89.69328308105469,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -90.018310546875,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [53] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 153.4450073242188,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -79.25856781005859,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -85.91040802001953,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [54] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door1R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 4.669000148773193,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -76.28057861328125,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -94.07204437255859,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [55] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -86.81464385986328,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -97.41474914550781,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [56] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2L",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -96.22814178466797,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -98.87776184082031,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [57] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Door2R",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -97.61915588378906,
+            ["PositionY"] = 213.6815032958984,
+            ["PositionZ"] = -95.30364227294922,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.8066725730896,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [58] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -88.25395965576172,
+            ["PositionY"] = 209.1054382324219,
+            ["PositionZ"] = -93.71652984619141,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [59] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 25.657470703125,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = 11.01396179199219,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [60] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -58.21446228027344,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = -21.62831115722656,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [61] =  {
+            ["ColorB"] = 195.0000035762787,
+            ["ColorG"] = 168.0000051856041,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "crackedConcreteLight",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -81.23007965087891,
+            ["PositionY"] = 210.905029296875,
+            ["PositionZ"] = -168.3057861328125,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [62] =  {
+            ["ColorB"] = 207.0000028610229,
+            ["ColorG"] = 203.0000030994415,
+            ["ColorR"] = 204.0000030398369,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "dirtyConcrete",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -104.7502517700195,
+            ["PositionY"] = 210.9465026855469,
+            ["PositionZ"] = -158.0769805908203,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.274237632751465,
+            ["SizeY"] = 3.96820330619812,
+            ["SizeZ"] = 1.595313906669617
+        },
+        [63] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 58.29974365234375,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = -72.85799407958984,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [64] =  {
+            ["ColorB"] = 195.0000035762787,
+            ["ColorG"] = 168.0000051856041,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "crackedConcreteLight",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -82.14018249511719,
+            ["PositionY"] = 210.905029296875,
+            ["PositionZ"] = -165.514404296875,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [65] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 25.657470703125,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = 11.01396179199219,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [66] =  {
+            ["ColorB"] = 97.00000181794167,
+            ["ColorG"] = 97.00000181794167,
+            ["ColorR"] = 194.0000036358833,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Top",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -75.99129486083984,
+            ["PositionY"] = 218.3349151611328,
+            ["PositionZ"] = -151.5025634765625,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.199460983276367,
+            ["SizeY"] = 0.1284399032592773,
+            ["SizeZ"] = 18.78565979003906
+        },
+        [67] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side2",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -79.68949127197266,
+            ["PositionY"] = 213.6815338134766,
+            ["PositionZ"] = -152.9418640136719,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057428300380707,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [68] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Back",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -72.61714172363281,
+            ["PositionY"] = 213.6815338134766,
+            ["PositionZ"] = -160.1722106933594,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.641905784606934,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 0.1824981868267059
+        },
+        [69] =  {
+            ["ColorB"] = 208.0000028014183,
+            ["ColorG"] = 208.0000028014183,
+            ["ColorR"] = 208.0000028014183,
+            ["Material"] = "Wood",
+            ["MaterialVariant"] = "plywoodFloor",
+            ["Name"] = "Floor",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -75.99129486083984,
+            ["PositionY"] = 209.10546875,
+            ["PositionZ"] = -151.5025634765625,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.671142578125,
+            ["SizeY"] = 0.2860600650310516,
+            ["SizeZ"] = 18.77146911621094
+        },
+        [70] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Side1",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -72.2930908203125,
+            ["PositionY"] = 213.6815338134766,
+            ["PositionZ"] = -150.0632476806641,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.3057433366775513,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [71] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 90.9420166015625,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = -156.7299499511719,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [72] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 58.29974365234375,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = -72.85799407958984,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [73] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -92.88069152832031,
+            ["PositionY"] = 210.6959991455078,
+            ["PositionZ"] = -176.9664764404297,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.082571983337402,
+            ["SizeY"] = 1.821905851364136,
+            ["SizeZ"] = 4.040359497070312
+        },
+        [74] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -94.55435180664062,
+            ["PositionY"] = 212.2686462402344,
+            ["PositionZ"] = -175.2117919921875,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.043353080749512,
+            ["SizeY"] = 1.967214584350586,
+            ["SizeZ"] = 3.682493448257446
+        },
+        [75] =  {
+            ["ColorB"] = 100.0000016391277,
+            ["ColorG"] = 185.0000041723251,
+            ["ColorR"] = 222.0000019669533,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -95.69255828857422,
+            ["PositionY"] = 211.5698089599609,
+            ["PositionZ"] = -174.0184936523438,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.141141414642334,
+            ["SizeY"] = 3.310880899429321,
+            ["SizeZ"] = 4.194277763366699
+        },
+        [76] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -43.64599990844727,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -97.00595092773438,
+            ["PositionY"] = 210.2704925537109,
+            ["PositionZ"] = -175.177001953125,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [77] =  {
+            ["ColorB"] = 100.0000016391277,
+            ["ColorG"] = 185.0000041723251,
+            ["ColorR"] = 222.0000019669533,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -93.56412506103516,
+            ["PositionY"] = 210.5449676513672,
+            ["PositionZ"] = -176.2499542236328,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.102206707000732,
+            ["SizeY"] = 1.558574199676514,
+            ["SizeZ"] = 4.194277763366699
+        },
+        [78] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 2.884000062942505,
+            ["PositionX"] = -96.67452239990234,
+            ["PositionY"] = 215.0555114746094,
+            ["PositionZ"] = -175.5244903564453,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.5692176818847656,
+            ["SizeY"] = 3.685242652893066,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [79] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 2.884000062942505,
+            ["PositionX"] = -94.14186859130859,
+            ["PositionY"] = 215.0555114746094,
+            ["PositionZ"] = -173.1087646484375,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.5692176818847656,
+            ["SizeY"] = 3.685242652893066,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [80] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = -14.15200042724609,
+            ["PositionX"] = -93.32926177978516,
+            ["PositionY"] = 214.1590270996094,
+            ["PositionZ"] = -179.0316925048828,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.300000011920929,
+            ["SizeY"] = 5.385242938995361,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [81] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = -14.15200042724609,
+            ["PositionX"] = -90.79660797119141,
+            ["PositionY"] = 214.1590118408203,
+            ["PositionZ"] = -176.6159515380859,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.300000011920929,
+            ["SizeY"] = 5.385242938995361,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [82] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0.7639999985694885,
+            ["PositionX"] = -93.97395324707031,
+            ["PositionY"] = 216.7127380371094,
+            ["PositionZ"] = -175.8202972412109,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.635945320129395,
+            ["SizeY"] = 0.3219058513641357,
+            ["SizeZ"] = 4.040359497070312
+        },
+        [83] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -91.27418518066406,
+            ["PositionY"] = 213.1353759765625,
+            ["PositionZ"] = -180.0633697509766,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.082571983337402,
+            ["SizeY"] = 0.4329168796539307,
+            ["SizeZ"] = 0.4416573047637939
+        },
+        [84] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -43.64599990844727,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -90.2349853515625,
+            ["PositionY"] = 210.2704925537109,
+            ["PositionZ"] = -177.2047576904297,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [85] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -89.86312866210938,
+            ["PositionY"] = 213.1353759765625,
+            ["PositionZ"] = -178.7174682617188,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.082571983337402,
+            ["SizeY"] = 0.4329168796539307,
+            ["SizeZ"] = 0.441657543182373
+        },
+        [86] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -90.30962371826172,
+            ["PositionY"] = 211.3033752441406,
+            ["PositionZ"] = -179.6622161865234,
+            ["Shape"] = "Block",
+            ["SizeX"] = 2.69184684753418,
+            ["SizeY"] = 0.2054650634527206,
+            ["SizeZ"] = 4.225519180297852
+        },
+        [87] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -89.74051666259766,
+            ["PositionY"] = 209.5367736816406,
+            ["PositionZ"] = -181.6712799072266,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.082571983337402,
+            ["SizeY"] = 0.1829168796539307,
+            ["SizeZ"] = 0.4416573047637939
+        },
+        [88] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -88.32946014404297,
+            ["PositionY"] = 209.5367736816406,
+            ["PositionZ"] = -180.3253784179688,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.082571983337402,
+            ["SizeY"] = 0.1829168796539307,
+            ["SizeZ"] = 0.441657543182373
+        },
+        [89] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -43.64599990844727,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -92.76763916015625,
+            ["PositionY"] = 210.2704925537109,
+            ["PositionZ"] = -179.6204681396484,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [90] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -43.64599990844727,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -94.47330474853516,
+            ["PositionY"] = 210.2704925537109,
+            ["PositionZ"] = -172.7612762451172,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [91] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -52.54587173461914,
+            ["PositionY"] = 210.6651306152344,
+            ["PositionZ"] = -83.79830169677734,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.082571983337402,
+            ["SizeY"] = 1.821905851364136,
+            ["SizeZ"] = 4.040359497070312
+        },
+        [92] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -51.15789031982422,
+            ["PositionY"] = 212.2377777099609,
+            ["PositionZ"] = -81.80994415283203,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.043353080749512,
+            ["SizeY"] = 1.967214584350586,
+            ["SizeZ"] = 3.682493448257446
+        },
+        [93] =  {
+            ["ColorB"] = 100.0000016391277,
+            ["ColorG"] = 185.0000041723251,
+            ["ColorR"] = 222.0000019669533,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -50.21398544311523,
+            ["PositionY"] = 211.5389404296875,
+            ["PositionZ"] = -80.45773315429688,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.141141414642334,
+            ["SizeY"] = 3.310880899429321,
+            ["SizeZ"] = 4.194277763366699
+        },
+        [94] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 34.91699981689453,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -51.60990524291992,
+            ["PositionY"] = 210.2396240234375,
+            ["PositionZ"] = -79.40012359619141,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [95] =  {
+            ["ColorB"] = 100.0000016391277,
+            ["ColorG"] = 185.0000041723251,
+            ["ColorR"] = 222.0000019669533,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -51.97910308837891,
+            ["PositionY"] = 210.5140991210938,
+            ["PositionZ"] = -82.98636627197266,
+            ["Shape"] = "Block",
+            ["SizeX"] = 3.102206707000732,
+            ["SizeY"] = 1.558574199676514,
+            ["SizeZ"] = 4.194277763366699
+        },
+        [96] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 2.884000062942505,
+            ["PositionX"] = -51.8847770690918,
+            ["PositionY"] = 215.0246429443359,
+            ["PositionZ"] = -79.79387664794922,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.5692176818847656,
+            ["SizeY"] = 3.685242652893066,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [97] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 2.884000062942505,
+            ["PositionX"] = -49.01483917236328,
+            ["PositionY"] = 215.0246429443359,
+            ["PositionZ"] = -81.79724884033203,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.5692176818847656,
+            ["SizeY"] = 3.685242652893066,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [98] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = -14.15200042724609,
+            ["PositionX"] = -54.65902328491211,
+            ["PositionY"] = 214.1281585693359,
+            ["PositionZ"] = -83.76813507080078,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.300000011920929,
+            ["SizeY"] = 5.385242938995361,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [99] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = -14.15200042724609,
+            ["PositionX"] = -51.7890625,
+            ["PositionY"] = 214.1281433105469,
+            ["PositionZ"] = -85.77149963378906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 0.300000011920929,
+            ["SizeY"] = 5.385242938995361,
+            ["SizeZ"] = 0.1824934482574463
+        },
+        [100] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0.7639999985694885,
+            ["PositionX"] = -51.63924026489258,
+            ["PositionY"] = 216.6818695068359,
+            ["PositionZ"] = -82.49948120117188,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.635945320129395,
+            ["SizeY"] = 0.3219058513641357,
+            ["SizeZ"] = 4.040359497070312
+        },
+        [101] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -55.26272583007812,
+            ["PositionY"] = 213.1045074462891,
+            ["PositionZ"] = -85.98698425292969,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.082571983337402,
+            ["SizeY"] = 0.4329168796539307,
+            ["SizeZ"] = 0.4416573047637939
+        },
+        [102] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 34.91699981689453,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -52.25482940673828,
+            ["PositionY"] = 210.2396240234375,
+            ["PositionZ"] = -86.43872833251953,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [103] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -53.66376495361328,
+            ["PositionY"] = 213.1045074462891,
+            ["PositionZ"] = -87.10314178466797,
+            ["Shape"] = "Block",
+            ["SizeX"] = 7.082571983337402,
+            ["SizeY"] = 0.4329168796539307,
+            ["SizeZ"] = 0.441657543182373
+        },
+        [104] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -54.67828750610352,
+            ["PositionY"] = 211.2725067138672,
+            ["PositionZ"] = -86.85284423828125,
+            ["Shape"] = "Block",
+            ["SizeX"] = 2.69184684753418,
+            ["SizeY"] = 0.2054650634527206,
+            ["SizeZ"] = 4.225519180297852
+        },
+        [105] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -56.53461837768555,
+            ["PositionY"] = 209.5059051513672,
+            ["PositionZ"] = -87.80901336669922,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.082571983337402,
+            ["SizeY"] = 0.1829168796539307,
+            ["SizeZ"] = 0.4416573047637939
+        },
+        [106] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 98.00000175833702,
+            ["ColorR"] = 98.00000175833702,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "plaster01",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -54.93564224243164,
+            ["PositionY"] = 209.5059051513672,
+            ["PositionZ"] = -88.92518615722656,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.082571983337402,
+            ["SizeY"] = 0.1829168796539307,
+            ["SizeZ"] = 0.441657543182373
+        },
+        [107] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 34.91699981689453,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -55.12476348876953,
+            ["PositionY"] = 210.2396240234375,
+            ["PositionZ"] = -84.43536376953125,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [108] =  {
+            ["ColorB"] = 53.00000064074993,
+            ["ColorG"] = 53.00000064074993,
+            ["ColorR"] = 53.00000064074993,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "gravelConcrete3",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 34.91699981689453,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -48.73996353149414,
+            ["PositionY"] = 210.2396240234375,
+            ["PositionZ"] = -81.40348815917969,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.793584942817688,
+            ["SizeY"] = 2.616183996200562,
+            ["SizeZ"] = 2.616183996200562
+        },
+        [109] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 17.57799911499023,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -115.1715698242188,
+            ["PositionY"] = 211.3461303710938,
+            ["PositionZ"] = -110.2691192626953,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [110] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 84.64399719238281,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -114.1557159423828,
+            ["PositionY"] = 211.3461303710938,
+            ["PositionZ"] = -113.0808410644531,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [111] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -63.75199890136719,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -116.8958435058594,
+            ["PositionY"] = 211.3461303710938,
+            ["PositionZ"] = -113.9977111816406,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [112] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 20.01899909973145,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -117.9580764770508,
+            ["PositionY"] = 211.3461303710938,
+            ["PositionZ"] = -111.2683944702148,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [113] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -116.0097579956055,
+            ["PositionY"] = 209.1829528808594,
+            ["PositionZ"] = -112.0868911743164,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.060451507568359,
+            ["SizeY"] = 0.4410975277423859,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [114] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 163.7610015869141,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -56.16548538208008,
+            ["PositionY"] = 211.9146728515625,
+            ["PositionZ"] = -91.49204254150391,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [115] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -129.1730041503906,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -58.5743293762207,
+            ["PositionY"] = 211.9146728515625,
+            ["PositionZ"] = -89.72138977050781,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [116] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 82.43099975585938,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -56.80806732177734,
+            ["PositionY"] = 211.9146728515625,
+            ["PositionZ"] = -87.43463134765625,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [117] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 166.2019958496094,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -54.40654754638672,
+            ["PositionY"] = 211.9146728515625,
+            ["PositionZ"] = -89.11100006103516,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [118] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -55.08300018310547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -56.48077774047852,
+            ["PositionY"] = 209.7514953613281,
+            ["PositionZ"] = -89.51531982421875,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.060451507568359,
+            ["SizeY"] = 0.4410975277423859,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [119] =  {
+            ["ColorB"] = 110.0000010430813,
+            ["ColorG"] = 153.0000060796738,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.1519927978516,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -114.4254302978516,
+            ["PositionY"] = 211.5088500976562,
+            ["PositionZ"] = -127.2246246337891,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.701357364654541,
+            ["SizeY"] = 5.103376865386963,
+            ["SizeZ"] = 7.673783302307129
+        },
+        [120] =  {
+            ["ColorB"] = 67.00000360608101,
+            ["ColorG"] = 67.00000360608101,
+            ["ColorR"] = 67.00000360608101,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.1519927978516,
+            ["OrientationZ"] = -2.216000080108643,
+            ["PositionX"] = -114.4282913208008,
+            ["PositionY"] = 214.0319671630859,
+            ["PositionZ"] = -127.2215881347656,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.874369144439697,
+            ["SizeY"] = 0.2851292788982391,
+            ["SizeZ"] = 7.84038257598877
+        },
+        [121] =  {
+            ["ColorB"] = 110.0000010430813,
+            ["ColorG"] = 153.0000060796738,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -103.9680023193359,
+            ["OrientationZ"] = 2.216000080108643,
+            ["PositionX"] = -33.08699417114258,
+            ["PositionY"] = 211.6030883789062,
+            ["PositionZ"] = -162.4938507080078,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.701356887817383,
+            ["SizeY"] = 5.103375911712646,
+            ["SizeZ"] = 7.673782348632812
+        },
+        [122] =  {
+            ["ColorB"] = 67.00000360608101,
+            ["ColorG"] = 67.00000360608101,
+            ["ColorR"] = 67.00000360608101,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -103.9680023193359,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -33.0644645690918,
+            ["PositionY"] = 214.1244659423828,
+            ["PositionZ"] = -162.5845031738281,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.874368667602539,
+            ["SizeY"] = 0.2851292490959167,
+            ["SizeZ"] = 7.840381622314453
+        },
+        [123] =  {
+            ["ColorB"] = 110.0000010430813,
+            ["ColorG"] = 153.0000060796738,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -178.9880065917969,
+            ["OrientationZ"] = 2.216000080108643,
+            ["PositionX"] = -25.97364616394043,
+            ["PositionY"] = 211.6030883789062,
+            ["PositionZ"] = -149.5628356933594,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.701356887817383,
+            ["SizeY"] = 5.103375911712646,
+            ["SizeZ"] = 7.673782348632812
+        },
+        [124] =  {
+            ["ColorB"] = 67.00000360608101,
+            ["ColorG"] = 67.00000360608101,
+            ["ColorR"] = 67.00000360608101,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -178.9880065917969,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -25.8802547454834,
+            ["PositionY"] = 214.1244659423828,
+            ["PositionZ"] = -149.5645141601562,
+            ["Shape"] = "Block",
+            ["SizeX"] = 4.874368667602539,
+            ["SizeY"] = 0.2851292490959167,
+            ["SizeZ"] = 7.840381622314453
+        },
+        [125] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 85.197998046875,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -86.05741119384766,
+            ["PositionY"] = 211.9455413818359,
+            ["PositionZ"] = -182.0397796630859,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [126] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 152.2640075683594,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -88.27054595947266,
+            ["PositionY"] = 211.9455413818359,
+            ["PositionZ"] = -184.0496978759766,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [127] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 3.868000030517578,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -90.16168975830078,
+            ["PositionY"] = 211.9455413818359,
+            ["PositionZ"] = -181.8650817871094,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [128] =  {
+            ["ColorB"] = 200.0000032782555,
+            ["ColorG"] = 200.0000032782555,
+            ["ColorR"] = 200.0000032782555,
+            ["Material"] = "Snow",
+            ["MaterialVariant"] = "snow2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 87.63800048828125,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -88.04240417480469,
+            ["PositionY"] = 211.9455413818359,
+            ["PositionZ"] = -179.8436279296875,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [129] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -133.64599609375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -88.05740356445312,
+            ["PositionY"] = 209.7823638916016,
+            ["PositionZ"] = -181.9568481445312,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6.060451507568359,
+            ["SizeY"] = 0.4410975277423859,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [130] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.4190063476562,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.25289916992188,
+            ["PositionY"] = 232.5563507080078,
+            ["PositionZ"] = -117.2473907470703,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [131] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.9629974365234,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -36.00704193115234,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -120.2935485839844,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [132] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -36.01860046386719,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -120.1474304199219,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [133] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -91.09275054931641,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -85.73584747314453,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [134] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -56.44013977050781,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -174.7803497314453,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [135] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -86.52422332763672,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -124.5613098144531,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [136] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -62.01172637939453,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -114.9911193847656,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [137] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 90.9420166015625,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = -156.7299499511719,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [138] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -83.72470855712891,
+            ["PositionY"] = 213.6815185546875,
+            ["PositionZ"] = -154.5612487792969,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81999969482422
+        },
+        [139] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -50.76990509033203,
+            ["PositionY"] = 213.6815185546875,
+            ["PositionZ"] = -141.7355041503906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [140] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerBlue",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.6360015869141,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -50.53978729248047,
+            ["PositionY"] = 223.1197052001953,
+            ["PositionZ"] = -141.9588165283203,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [141] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 7.070091247558594,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = -189.3722229003906,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [142] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.2469940185547,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -58.48639678955078,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -144.6088562011719,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [143] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.2169952392578,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -50.58446884155273,
+            ["PositionY"] = 232.5578765869141,
+            ["PositionZ"] = -141.4135131835938,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [144] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -61.73636627197266,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -114.8807907104492,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [145] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.2599945068359,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -94.32868194580078,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -127.1851425170898,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [146] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 161.1300048828125,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -138.0421142578125,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -118.9211730957031,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [147] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -137.9885406494141,
+            ["PositionY"] = 232.5578308105469,
+            ["PositionZ"] = -118.612434387207,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [148] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.7039947509766,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -130.9940185546875,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -136.5665740966797,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [149] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerGreen",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.4810028076172,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -124.3876037597656,
+            ["PositionY"] = 232.5578308105469,
+            ["PositionZ"] = -154.1092987060547,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [150] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = 7.070091247558594,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = -189.3722229003906,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [151] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -58.46656036376953,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -144.9233551025391,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [152] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.4660034179688,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -58.31674194335938,
+            ["PositionY"] = 232.5578308105469,
+            ["PositionZ"] = -145.1797180175781,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [153] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -69.51686859130859,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -117.9712295532227,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [154] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7350006103516,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -94.33950805664062,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -127.3702850341797,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [155] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -86.26638793945312,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -124.6642074584961,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [156] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -108.539924621582,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -148.3882904052734,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [157] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.8890075683594,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.28899383544922,
+            ["PositionY"] = 223.1181793212891,
+            ["PositionZ"] = -116.9526138305664,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [158] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.7489929199219,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -69.66630554199219,
+            ["PositionY"] = 232.5563507080078,
+            ["PositionZ"] = -118.2330017089844,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [159] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.1499938964844,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -138.2691955566406,
+            ["PositionY"] = 241.9960021972656,
+            ["PositionZ"] = -119.0591278076172,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [160] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.0709991455078,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -131.7973785400391,
+            ["PositionY"] = 241.9960021972656,
+            ["PositionZ"] = -136.8972778320312,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [161] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerRed",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.6309967041016,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -110.5053329467773,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -189.64697265625,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [162] =  {
+            ["ColorB"] = 58.00000034272671,
+            ["ColorG"] = 58.00000034272671,
+            ["ColorR"] = 149.0000063180923,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "crackedConcreteLight",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -46.86865234375,
+            ["PositionY"] = 210.905029296875,
+            ["PositionZ"] = -136.4057922363281,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [163] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -137.8932952880859,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -118.9787292480469,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [164] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -131.2278442382812,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -136.7074890136719,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [165] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 157.3869934082031,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -131.4736785888672,
+            ["PositionY"] = 232.5578308105469,
+            ["PositionZ"] = -136.5605316162109,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [166] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -124.3774642944336,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -154.3601531982422,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [167] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -117.2519073486328,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -172.1124877929688,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [168] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -124.0846710205078,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -154.2645721435547,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [169] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.0290069580078,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -117.3492050170898,
+            ["PositionY"] = 223.1196594238281,
+            ["PositionZ"] = -171.9977111816406,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.437999725341797,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [170] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.343994140625,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -110.3373718261719,
+            ["PositionY"] = 213.6814880371094,
+            ["PositionZ"] = -189.7213897705078,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 9.438179016113281,
+            ["SizeZ"] = 18.81960868835449
+        },
+        [171] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 157.1410064697266,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -135.9985046386719,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -149.0790252685547,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [172] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 161.0850067138672,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -118.9177322387695,
+            ["PositionY"] = 218.5543060302734,
+            ["PositionZ"] = -192.9668121337891,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 19.1838321685791,
+            ["SizeZ"] = 18.49199676513672
+        },
+        [173] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 110.1129989624023,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -195.1064300537109,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -38.11953735351562,
+            ["Shape"] = "Block",
+            ["SizeX"] = 17.80207252502441,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [174] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 110.1129989624023,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -179.3592529296875,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = 4.881195068359375,
+            ["Shape"] = "Block",
+            ["SizeX"] = 17.80207252502441,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [175] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 110.1129989624023,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -162.9586029052734,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = 49.66644287109375,
+            ["Shape"] = "Block",
+            ["SizeX"] = 17.80207252502441,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [176] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 161.1119995117188,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = 4.689666748046875,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -255.8878936767578,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [177] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -2.495101928710938,
+            ["PositionY"] = 223.0885009765625,
+            ["PositionZ"] = -260.3009033203125,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 28.252197265625,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [178] =  {
+            ["ColorB"] = 98.00000175833702,
+            ["ColorG"] = 124.0000002086163,
+            ["ColorR"] = 103.0000014603138,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.0299987792969,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -10.69333648681641,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -265.7393188476562,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [179] =  {
+            ["ColorB"] = 163.0000054836273,
+            ["ColorG"] = 128.0000075697899,
+            ["ColorR"] = 88.00000235438347,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.4900054931641,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -20.75971984863281,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -265.7427368164062,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [180] =  {
+            ["ColorB"] = 165.000005364418,
+            ["ColorG"] = 162.000005543232,
+            ["ColorR"] = 163.0000054836273,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.0469970703125,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -29.10783386230469,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -270.6583557128906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 75.49842834472656
+        },
+        [181] =  {
+            ["ColorB"] = 79.00000289082527,
+            ["ColorG"] = 79.00000289082527,
+            ["ColorR"] = 158.0000057816505,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "ContainerWhite",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 65.84700012207031,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -51.16221237182617,
+            ["PositionY"] = 227.8074951171875,
+            ["PositionZ"] = -358.3326110839844,
+            ["Shape"] = "Block",
+            ["SizeX"] = 8.242544174194336,
+            ["SizeY"] = 37.6901969909668,
+            ["SizeZ"] = 90.89951324462891
+        },
+        [182] =  {
+            ["ColorB"] = 136.0000070929527,
+            ["ColorG"] = 136.0000070929527,
+            ["ColorR"] = 136.0000070929527,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -59.45114135742188,
+            ["PositionY"] = 219.4827423095703,
+            ["PositionZ"] = -189.5299682617188,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 130.1039733886719,
+            ["SizeY"] = 1.399999976158142,
+            ["SizeZ"] = 1.399999976158142
+        },
+        [183] =  {
+            ["ColorB"] = 103.0000014603138,
+            ["ColorG"] = 250.0000002980232,
+            ["ColorR"] = 123.0000002682209,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "metalRusty2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -100.2729187011719,
+            ["PositionY"] = 213.8884582519531,
+            ["PositionZ"] = -84.58628082275391,
+            ["Shape"] = "Block",
+            ["SizeX"] = 130.1438903808594,
+            ["SizeY"] = 9.852107048034668,
+            ["SizeZ"] = 0.2577246427536011
+        },
+        [184] =  {
+            ["ColorB"] = 136.0000070929527,
+            ["ColorG"] = 136.0000070929527,
+            ["ColorR"] = 136.0000070929527,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -100.2942123413086,
+            ["PositionY"] = 219.4827423095703,
+            ["PositionZ"] = -84.59457397460938,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 130.0982666015625,
+            ["SizeY"] = 1.399999976158142,
+            ["SizeZ"] = 1.399999976158142
+        },
+        [185] =  {
+            ["ColorB"] = 136.0000070929527,
+            ["ColorG"] = 136.0000070929527,
+            ["ColorR"] = 136.0000070929527,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "corrugatedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -19.30694580078125,
+            ["PositionY"] = 219.4827423095703,
+            ["PositionZ"] = -113.4771728515625,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 112.7792053222656,
+            ["SizeY"] = 1.399999976158142,
+            ["SizeZ"] = 1.399999976158142
+        },
+        [186] =  {
+            ["ColorB"] = 103.0000014603138,
+            ["ColorG"] = 250.0000002980232,
+            ["ColorR"] = 123.0000002682209,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "metalRusty2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -19.31128692626953,
+            ["PositionY"] = 213.8884582519531,
+            ["PositionZ"] = -113.4660491943359,
+            ["Shape"] = "Block",
+            ["SizeX"] = 112.4491195678711,
+            ["SizeY"] = 9.852107048034668,
+            ["SizeZ"] = 0.2577246427536011
+        },
+        [187] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 173.656005859375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -66.96932220458984,
+            ["PositionY"] = 218.9071960449219,
+            ["PositionZ"] = -127.0363082885742,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 0.4410975277423859,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [188] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 80.45600128173828,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 180,
+            ["PositionX"] = -69.44374084472656,
+            ["PositionY"] = 212.428466796875,
+            ["PositionZ"] = -106.8667144775391,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 0.4410975277423859,
+            ["SizeZ"] = 7.007466793060303
+        },
+        [189] =  {
+            ["ColorB"] = 195.0000035762787,
+            ["ColorG"] = 168.0000051856041,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "crackedConcreteLight",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -73.26993560791016,
+            ["PositionY"] = 210.905029296875,
+            ["PositionZ"] = -107.7980346679688,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [190] =  {
+            ["ColorB"] = 195.0000035762787,
+            ["ColorG"] = 168.0000051856041,
+            ["ColorR"] = 109.0000011026859,
+            ["Material"] = "Concrete",
+            ["MaterialVariant"] = "crackedConcreteLight",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -44.07505798339844,
+            ["PositionY"] = 210.905029296875,
+            ["PositionZ"] = -150.7673950195312,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 3.885260343551636,
+            ["SizeY"] = 2.783389568328857,
+            ["SizeZ"] = 2.783389568328857
+        },
+        [191] =  {
+            ["ColorB"] = 103.0000014603138,
+            ["ColorG"] = 250.0000002980232,
+            ["ColorR"] = 123.0000002682209,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "metalRusty2",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -59.42470550537109,
+            ["PositionY"] = 213.8884582519531,
+            ["PositionZ"] = -189.5196838378906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 130.16064453125,
+            ["SizeY"] = 9.852107048034668,
+            ["SizeZ"] = 0.2577246427536011
+        },
+        [192] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -16.4720458984375,
+            ["PositionY"] = 210.0738220214844,
+            ["PositionZ"] = -129.6860656738281,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [193] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.5269927978516,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -16.47203826904297,
+            ["PositionY"] = 212.2966461181641,
+            ["PositionZ"] = -129.6860809326172,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [194] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -18.93000030517578,
+            ["OrientationZ"] = 180,
+            ["PositionX"] = -16.4720458984375,
+            ["PositionY"] = 214.5194702148438,
+            ["PositionZ"] = -129.6860809326172,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [195] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.6820068359375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -16.47205352783203,
+            ["PositionY"] = 216.7422943115234,
+            ["PositionZ"] = -129.6860656738281,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 5.838521003723145
+        },
+        [196] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 159.1860046386719,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.60511779785156,
+            ["PositionY"] = 216.7422943115234,
+            ["PositionZ"] = -98.09207153320312,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8.838521003723145
+        },
+        [197] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -21.26600074768066,
+            ["OrientationZ"] = 180,
+            ["PositionX"] = -28.53142547607422,
+            ["PositionY"] = 210.0738220214844,
+            ["PositionZ"] = -98.06111907958984,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8.838521003723145
+        },
+        [198] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.0579986572266,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -28.60878753662109,
+            ["PositionY"] = 212.2966461181641,
+            ["PositionZ"] = -98.09376525878906,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8.838521003723145
+        },
+        [199] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -18.93000030517578,
+            ["OrientationZ"] = 180,
+            ["PositionX"] = -28.58383941650391,
+            ["PositionY"] = 214.5194702148438,
+            ["PositionZ"] = -98.07778930664062,
+            ["Shape"] = "Block",
+            ["SizeX"] = 5.120481491088867,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8.838521003723145
+        },
+        [200] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -25.57218170166016,
+            ["PositionY"] = 238.8616943359375,
+            ["PositionZ"] = -105.5002670288086,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 59.79862213134766,
+            ["SizeY"] = 1.430405020713806,
+            ["SizeZ"] = 1.430405020713806
+        },
+        [201] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "Metal",
+            ["MaterialVariant"] = "galvanizedMetal",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = -111.265998840332,
+            ["OrientationZ"] = -90,
+            ["PositionX"] = -25.57218170166016,
+            ["PositionY"] = 268.6685180664062,
+            ["PositionZ"] = -105.5002670288086,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.2322026491165161,
+            ["SizeY"] = 3.140556812286377,
+            ["SizeZ"] = 3.140556812286377
+        },
+        [202] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.3489990234375,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -141.2394409179688,
+            ["PositionY"] = 210.0738220214844,
+            ["PositionZ"] = -105.3817825317383,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [203] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.1410064697266,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -141.2394409179688,
+            ["PositionY"] = 212.2966461181641,
+            ["PositionZ"] = -105.3817901611328,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [204] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.6849975585938,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -141.2394409179688,
+            ["PositionY"] = 214.5194702148438,
+            ["PositionZ"] = -105.3817901611328,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [205] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 155.2969970703125,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -141.2394561767578,
+            ["PositionY"] = 216.7422943115234,
+            ["PositionZ"] = -105.3817825317383,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [206] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 165.8220062255859,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -102.9592590332031,
+            ["PositionY"] = 214.5194702148438,
+            ["PositionZ"] = -201.3297424316406,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [207] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 163.4859924316406,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -102.9592590332031,
+            ["PositionY"] = 210.0738220214844,
+            ["PositionZ"] = -201.3297424316406,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [208] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.4340057373047,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -102.9592666625977,
+            ["PositionY"] = 216.7422943115234,
+            ["PositionZ"] = -201.3297424316406,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [209] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 255,
+            ["ColorR"] = 255,
+            ["Material"] = "WoodPlanks",
+            ["MaterialVariant"] = "woodPlanksOld",
+            ["Name"] = "Part",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 160.2790069580078,
+            ["OrientationZ"] = 0,
+            ["PositionX"] = -102.9592514038086,
+            ["PositionY"] = 212.2966461181641,
+            ["PositionZ"] = -201.3297424316406,
+            ["Shape"] = "Block",
+            ["SizeX"] = 6,
+            ["SizeY"] = 2.22282338142395,
+            ["SizeZ"] = 8
+        },
+        [210] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -46.63095855712891,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -72.76882934570312,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [211] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -14.90994644165039,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -159.357666015625,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [212] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -92.89582824707031,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -192.8750762939453,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [213] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -129.8587646484375,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -106.3893814086914,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [214] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -105.6112899780273,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -94.77955627441406,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [215] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -121.2367553710938,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -134.0362396240234,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [216] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -106.132438659668,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -163.555908203125,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [217] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -65.48802185058594,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -187.5084838867188,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [218] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -40.23740768432617,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -176.78369140625,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [219] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -14.16712188720703,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -136.0482025146484,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [220] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -78.56331634521484,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -81.17239379882812,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        },
+        [221] =  {
+            ["ColorB"] = 255,
+            ["ColorG"] = 132.0000073313713,
+            ["ColorR"] = 0,
+            ["Material"] = "Plastic",
+            ["MaterialVariant"] = "",
+            ["Name"] = "RandomSpawn",
+            ["OrientationX"] = 0,
+            ["OrientationY"] = 158.7339935302734,
+            ["OrientationZ"] = 90,
+            ["PositionX"] = -37.22621536254883,
+            ["PositionY"] = 209.3,
+            ["PositionZ"] = -107.4155502319336,
+            ["Shape"] = "Cylinder",
+            ["SizeX"] = 0.02500000037252903,
+            ["SizeY"] = 3.5,
+            ["SizeZ"] = 3.5
+        }
+    }
+
+    if workspace:FindFirstChild("CustomMap") then
+        workspace.CustomMap:Destroy()
+    end
+    local MapFolder = Instance.new("Folder")
+    MapFolder.Parent = workspace
+    MapFolder.Name = "CustomMap"
+
+    --local part = nil
+    local CollectionService = game:GetService("CollectionService")
+    for _, Barriers in pairs(CollectionService:GetTagged("MAP_COLLIDABLE")) do
+        if Barriers.ClassName == "Part" then
+            --part = Barriers
+
+            for _, Objects in MapObjects do 
+                local CopiedObject = Barriers:Clone()
+                CopiedObject.Parent = MapFolder
+                CopiedObject:ClearAllChildren()
+                CopiedObject.Anchored = true
+                CopiedObject.Name = Objects.Name
+                --print(CopiedObject.Name  .. ", " ..CopiedObject.Parent.Name)
+                CopiedObject.Position = Vector3.new(Objects.PositionX,Objects.PositionY,Objects.PositionZ)
+                CopiedObject.Orientation = Vector3.new(Objects.OrientationX,Objects.OrientationY,Objects.OrientationZ)
+                CopiedObject.Size = Vector3.new(Objects.SizeX,Objects.SizeY,Objects.SizeZ)
+                CopiedObject.Shape = Enum.PartType[Objects.Shape]
+                CopiedObject.Material = Enum.Material[Objects.Material]
+                CopiedObject.MaterialVariant = Objects.MaterialVariant
+                if CopiedObject.Name == "Spawn1" or CopiedObject.Name == "Spawn2" then
+                    CopiedObject.Transparency = 1
+                elseif CopiedObject.Name == "RandomSpawn" then
+                    CopiedObject.Transparency = 1
+                    if MapFolder:FindFirstChild("RandomSpawns") then
+                        CopiedObject.Parent = MapFolder.RandomSpawns
+                    else
+                        local RandomSpawns = Instance.new("Model")
+                        RandomSpawns.Parent = MapFolder
+                        RandomSpawns.Name = "RandomSpawns"
+                    end
+                else
+                    CopiedObject.Transparency = 0
+                end
+                if Objects.Material == "Neon" then
+                    local Light = Instance.new("PointLight")
+                    Light.Parent = CopiedObject
+                    Light.Color = Color3.fromRGB(Objects.ColorR,Objects.ColorG,Objects.ColorB)
+                    Light.Range = 30
+                    Light.Shadows = true
+                    Light.Brightness = 2
+                end
+                CopiedObject.Color = Color3.fromRGB(Objects.ColorR,Objects.ColorG,Objects.ColorB)
+                CopiedObject.CastShadow = true
+                CopiedObject.CanCollide  = true
+                CopiedObject.CanQuery  = true
+                CopiedObject.CanTouch = true
+            end
+            --part:Destroy()
+
+            break
+        end
+    end
+
+    local Lighting = game.Lighting
+    --graphics
+    Lighting.Ambient = Color3.fromRGB(72, 72, 72)
+    Lighting.Brightness = 3
+    Lighting.ExposureCompensation = -0.3
+    Lighting.ClockTime = 10
+    Lighting.GeographicLatitude = 0
+    if Lighting:FindFirstChild("ModColorCorrection") then
+        Lighting.ModColorCorrection:Destroy()
+    end
+    Lighting.Atmosphere.Density = 0.4
+    Lighting.Atmosphere.Offset = 0.25
+    Lighting.Atmosphere.Haze = 2.3
+    Lighting.Atmosphere.Glare = 0.2
+    Lighting.Atmosphere.Color = Color3.fromRGB(202, 202, 202)
+    Lighting.Atmosphere.Decay = Color3.fromRGB(161, 161, 161)
+    local ColorCorrection = Instance.new("ColorCorrectionEffect")
+    ColorCorrection.Name = "ModColorCorrection"
+    ColorCorrection.Parent = Lighting
+    ColorCorrection.Brightness = -0.06
+    ColorCorrection.Contrast = 0
+    ColorCorrection.Saturation = 0.1
+    ColorCorrection.TintColor = Color3.fromRGB(255, 246, 224)
+end
+
+
+
+function SetMusic()
+    game.ReplicatedStorage.frontlines_assets.synthetic.sounds.menu.menu_music.SoundId = "rbxassetid://8131510537"
+    game.ReplicatedStorage.frontlines_assets.synthetic.sounds.menu.menu_music:Play()
+end
+
+function RestoreMusic()
+    game.ReplicatedStorage.frontlines_assets.synthetic.sounds.menu.menu_music.SoundId = "rbxassetid://11990103021"
+end
+
+
+
+
+UserInputService.InputBegan:Connect(function(input)
+    if Destroyed == false then
+        if input.KeyCode == Enum.KeyCode.Slash then
+            LockSettings = true
+            Frame["Lock settings"].BackgroundColor3 = FeatureEnabledColor
+        end
+        if input.KeyCode == Enum.KeyCode.Return then
+            LockSettings = false
+            Frame["Lock settings"].BackgroundColor3 = FeatureColor
+        end
+        if LockSettings == false then
+            for _,CheckFeatures in pairs(Frame:GetChildren()) do
+                if CheckFeatures:FindFirstChild("KeyValue") then
+                    if input.KeyCode == (Enum.KeyCode[CheckFeatures.KeyValue.Value]) then
+                        if CheckFeatures.FeatureValue.Value == "Load map" then
+                            LoadMap()
+                        elseif CheckFeatures.FeatureValue.Value == "Custom music" then
+                            if CustomMusic == false then
+                                CustomMusic = true
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                SetMusic()
+                            else
+                                CustomMusic = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                                RestoreMusic()
+                            end
+                            print(game.ReplicatedStorage.frontlines_assets.synthetic.sounds.menu.menu_music.SoundId)
+                        elseif CheckFeatures.FeatureValue.Value == "respawn to 1" then
+                            if Respawn1 == false then
+                                Respawn1 = true
+                                Respawn2 = false
+                                RespawnRandom = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                Frame["respawn to 2"].BackgroundColor3 = FeatureColor
+                                Frame["respawn to random"].BackgroundColor3 = FeatureColor
+                            else
+                                Respawn1 = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                            end
+                        elseif CheckFeatures.FeatureValue.Value == "respawn to 2" then
+                            if Respawn2 == false then
+                                Respawn2 = true
+                                Respawn1 = false
+                                RespawnRandom = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                            else
+                                Respawn2 = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                                Frame["respawn to 1"].BackgroundColor3 = FeatureColor
+                                Frame["respawn to random"].BackgroundColor3 = FeatureColor
+                            end
+                        elseif CheckFeatures.FeatureValue.Value == "respawn to random" then
+                            if RespawnRandom == false then
+                                RespawnRandom = true
+                                Respawn2 = false
+                                Respawn1 = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                Frame["respawn to 1"].BackgroundColor3 = FeatureColor
+                                Frame["respawn to 2"].BackgroundColor3 = FeatureColor
+                            else
+                                RespawnRandom = false
+                                RespawnedToMap = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                            end
+                        elseif CheckFeatures.FeatureValue.Value == "Toggle barriers" then
+                            if Barriers == false then
+                                Barriers = true
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                RemoveBarriers()
+                            else
+                                Barriers = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                                RestoreBarriers()
+                            end
+                        elseif CheckFeatures.FeatureValue.Value == "Knife Fire" then
+                            KnifeFire()
+                        elseif CheckFeatures.FeatureValue.Value == "Glass camo" then
+                            SetWeaponCamo(1)
+                        elseif CheckFeatures.FeatureValue.Value == "Camo2" then
+                            SetWeaponCamo(2)
+                        elseif CheckFeatures.FeatureValue.Value == "Camo3" then
+                            SetWeaponCamo(3)
+                        elseif CheckFeatures.FeatureValue.Value == "Camo4" then
+                            SetWeaponCamo(4)
+                        elseif CheckFeatures.FeatureValue.Value == "Custom reticle" then
+                            if CustomReticle == false then
+                                CustomReticle = true
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                SetReticle()
+                            else
+                                CustomReticle = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                                RestoreReticle()
+                            end
+                        elseif CheckFeatures.FeatureValue.Value == "One handed mode" then
+                            if OneHanded == false then
+                                OneHanded = true
+                                CheckFeatures.BackgroundColor3 = FeatureEnabledColor
+                                EnableOneHanded()
+                            else
+                                OneHanded = false
+                                CheckFeatures.BackgroundColor3 = FeatureColor
+                                DisableOneHanded()
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+        end
+    end
+end)
+
+function CapVelocity(Character)
+    if Character.HumanoidRootPart.Velocity.X > 140 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
+    end
+    if Character.HumanoidRootPart.Velocity.X < -140 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(-140,Character.HumanoidRootPart.Velocity.Y,Character.HumanoidRootPart.Velocity.Z)
+    end
+    if Character.HumanoidRootPart.Velocity.Y > 110 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,110,Character.HumanoidRootPart.Velocity.Z)
+    end
+    if Character.HumanoidRootPart.Velocity.Y < -110 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,-110,Character.HumanoidRootPart.Velocity.Z)
+    end
+    if Character.HumanoidRootPart.Velocity.Z > 140 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,140)
+    end
+    if Character.HumanoidRootPart.Velocity.Z < -140 then
+        Character.HumanoidRootPart.Velocity = Vector3.new(Character.HumanoidRootPart.Velocity.X,Character.HumanoidRootPart.Velocity.Y,-140)
+    end
+end
+
+while true do
+    wait(0)
+    RGBHue += 0.005
+    if RGBHue > 1 then
+        RGBHue -= 1
+    end
+    local Character = nil
+    for _,Soldiers in pairs(workspace:GetChildren()) do
+        if Soldiers ~= nil then
+            if Soldiers.Name == "soldier_model" then
+                if Soldiers:FindFirstChild("fpv_rig") then
+                    if Soldiers:FindFirstChild("HumanoidRootPart") then
+                        Character = Soldiers
+                    end
+                end
+            end
+        end
+    end
+    if Character ~= nil and CustomReticle == true then
+        if os.clock() -1 > LastReticleUpdate or CanSetReticle == true then
+            wait(0)
+            print("setReticle")
+            CanSetReticle = false
+            LastReticleUpdate = os.clock()
+            SetReticle()
+        end
+    else
+        CanSetReticle = true
+    end
+    local respawn = false
+    if Respawn1 == true or Respawn2 == true or RespawnRandom == true then
+        respawn = true
+    end
+    if Character ~= nil and respawn == true and workspace:FindFirstChild("CustomMap") then
+        if RespawnedToMap == false then
+            RespawnedToMap = true
+            local Spawn1 = workspace.CustomMap:FindFirstChild("Spawn1")
+            local Spawn2 = workspace.CustomMap:FindFirstChild("Spawn2")
+            local RandomSpawn = nil
+            if workspace.CustomMap:FindFirstChild("RandomSpawns") then
+                RandomSpawn = workspace.CustomMap.RandomSpawns:GetChildren()[math.random(1, #workspace.CustomMap.RandomSpawns:GetChildren())]
+            end
+            EnableNoclip()
+            wait(0.2)
+            for I = 1,150,1 do
+                if Respawn1 == true and Spawn1 ~= nil and ((Spawn1.Position+Vector3.new(0,1.5,0))-Character.HumanoidRootPart.Position).Magnitude > 4 then
+                    Character.HumanoidRootPart.Velocity = (Spawn1.Position+Vector3.new(0,1.5,0)-Character.HumanoidRootPart.Position) * 26
+                elseif Respawn2 == true and Spawn2 ~= nil and ((Spawn2.Position+Vector3.new(0,1.5,0))-Character.HumanoidRootPart.Position).Magnitude > 4 then
+                    Character.HumanoidRootPart.Velocity = (Spawn2.Position+Vector3.new(0,1.5,0)-Character.HumanoidRootPart.Position) * 26
+                elseif RespawnRandom == true and RandomSpawn ~= nil and ((RandomSpawn.Position+Vector3.new(0,1.5,0))-Character.HumanoidRootPart.Position).Magnitude > 4 then
+                    Character.HumanoidRootPart.Velocity = (RandomSpawn.Position+Vector3.new(0,1.5,0)-Character.HumanoidRootPart.Position) * 26
+                else
+                    Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+                    break
+                end
+                CapVelocity(Character)
+                wait()
+            end
+            DisableNoclip()
+        end
+    else
+        RespawnedToMap = false
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.T) and LockSettings == false then
+        Character.HumanoidRootPart.Velocity = workspace.CurrentCamera.CFrame.LookVector * 100
+        Frame["Mouse TP"].BackgroundColor3 = FeatureEnabledColor
+    else
+        Frame["Mouse TP"].BackgroundColor3 = FeatureColor
+    end
+    if CrazyMovement == true and Character ~= nil then
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            Character.HumanoidRootPart.Velocity = Character.HumanoidRootPart.CFrame.LookVector * 100
+        end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+            Character.HumanoidRootPart.Velocity += Vector3.new(0,35,0)
+        end
+    else
+        CrazyMovement = false
+    end
+    if Character ~= nil then
+        CapVelocity(Character)
+    end
+    if game.MaterialService:FindFirstChild("CamoMaterial2") then
+        game.MaterialService.CamoMaterial2.StudsPerTile = 2+(math.sin(os.clock()*.3)/1.8)
+    end
+    local CollectionService = game:GetService("CollectionService")
+    for _, CamoParts in pairs(CollectionService:GetTagged("Camo3")) do
+        if CamoParts ~= nil then
+            CamoParts.Color = Color3.fromHSV(RGBHue, 0.88, 0.67)
+        end
+    end
+    for _, CamoParts in pairs(CollectionService:GetTagged("Camo4")) do
+        if CamoParts ~= nil then
+            CamoParts.Color = Color3.fromHSV(RGBHue, 1, 1)
+        end
+    end
+    if UserInputService:IsKeyDown(Enum.KeyCode.End) then
+        print("destroying "..SciptTitle)
+        UI:Destroy()
+        Destroyed = true
+        RestoreBarriers()
+        DisableNoclip()
+        RestoreReticle()
+        break
+    end
+end
